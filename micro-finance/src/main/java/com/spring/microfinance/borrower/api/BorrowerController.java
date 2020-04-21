@@ -32,10 +32,10 @@ public class BorrowerController {
 		return new ResponseEntity<Borrower>(borrowerServiceImpl.createBorrower(borrower), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Retrieves active Borrower detail, based on given id")
-	@GetMapping(value = "/{borrowerId}")
-	public ResponseEntity<Borrower> getBorrower(@PathVariable String borrowerId) {
-		return new ResponseEntity<Borrower>(borrowerServiceImpl.getBorrower(borrowerId), HttpStatus.OK);
+	@ApiOperation(value = "Retrieves active Borrower detail, based on given mobile number")
+	@GetMapping(value = "/{mobileNumber}")
+	public ResponseEntity<Borrower> getBorrower(@PathVariable String mobileNumber) {
+		return new ResponseEntity<Borrower>(borrowerServiceImpl.getBorrowerByMobile(mobileNumber), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Retrieves all active Borrower details")
@@ -44,16 +44,16 @@ public class BorrowerController {
 		return new ResponseEntity<List<Borrower>>(borrowerServiceImpl.getAllBorrower(), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Update Borrower detail")
+	@ApiOperation(value = "Updates Borrower details")
 	@PutMapping
 	public ResponseEntity<Borrower> updateBorrower(@RequestBody Borrower borrower) {
 		return new ResponseEntity<Borrower>(borrowerServiceImpl.updateBorrower(borrower), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Makes Borrower visibilty to deleted")
-	@DeleteMapping(value = "/{borrowerId}")
-	public ResponseEntity<Borrower> deleteBorrower(@PathVariable String borrowerId) {
-		borrowerServiceImpl.deleteBorrower(borrowerId);
+	@ApiOperation(value = "Makes Borrower visibilty to deleted using id")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Borrower> deleteBorrower(@PathVariable String id) {
+		borrowerServiceImpl.deleteBorrower(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

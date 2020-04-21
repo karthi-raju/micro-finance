@@ -16,4 +16,6 @@ public interface BorrowerDAO extends MongoRepository<Borrower, String> {
 
 	List<Borrower> findByVisibility(Visibility visibility);
 
+	Optional<Borrower> findByIdAndVisibility(String borrowerId, Visibility visibility);
+
 }

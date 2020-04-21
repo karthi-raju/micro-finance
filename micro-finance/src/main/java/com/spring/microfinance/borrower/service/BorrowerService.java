@@ -6,14 +6,16 @@ import com.spring.microfinance.borrower.entity.Borrower;
 
 public interface BorrowerService {
 
-	public Borrower getBorrower(String BorrowerId);
+	public Borrower getBorrowerByMobile(String mobileNumber);
 
 	public List<Borrower> getAllBorrower();
 
-	public void deleteBorrower(String BorrowerId);
+	public void deleteBorrower(String id);
 
 	public Borrower updateBorrower(Borrower Borrower);
 
 	public Borrower createBorrower(Borrower Borrower);
+
+	public Borrower getBorrowerById(String id);
 
 }
