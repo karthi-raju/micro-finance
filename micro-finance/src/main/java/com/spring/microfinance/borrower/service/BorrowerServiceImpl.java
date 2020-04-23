@@ -10,9 +10,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.spring.microfinance.borrower.entity.Borrower;
-import com.spring.microfinance.borrower.exception.BorrowerNotFoundException;
 import com.spring.microfinance.borrower.exception.DuplicateValueException;
-import com.spring.microfinance.borrower.exception.NoBorrowerDataFoundException;
+import com.spring.microfinance.borrower.exception.NoUserDataFoundException;
+import com.spring.microfinance.borrower.exception.UserNotFoundException;
 import com.spring.microfinance.borrower.repository.BorrowerDAO;
 import com.spring.microfinance.util.MicroFinanceUtil;
 import com.spring.microfinance.util.Visibility;
@@ -26,12 +26,12 @@ public class BorrowerServiceImpl implements BorrowerService {
 	private BorrowerDAO borrowerDAO;
 
 	@Override
-	public Borrower getBorrower(String borrowerMobileNumber) {
+	public Borrower getBorrowerByMobile(String borrowerMobileNumber) {
 		Optional<Borrower> optionalBorrower = borrowerDAO.findByMobileNumberAndVisibility(borrowerMobileNumber,
 				Visibility.ACTIVE);
 		if (!optionalBorrower.isPresent()) {
-			LOGGER.info(" no borrower details found for the id " + borrowerMobileNumber);
-			throw new BorrowerNotFoundException(borrowerMobileNumber);
+			LOGGER.info(" no borrower details found for the mobile number " + borrowerMobileNumber);
+			throw new UserNotFoundException("No borrower detail available for mobile number " + borrowerMobileNumber);
 		}
 		return optionalBorrower.get();
 	}
@@ -41,15 +41,15 @@ public class BorrowerServiceImpl implements BorrowerService {
 		List<Borrower> borrowers = borrowerDAO.findByVisibility(Visibility.ACTIVE);
 		if (borrowers.size() == 0) {
 			LOGGER.info(" no borrower details found ");
-			throw new NoBorrowerDataFoundException();
+			throw new NoUserDataFoundException("no borrower details found");
 		}
 		LOGGER.info(" size of the borrower list " + borrowers.size());
 		return borrowers;
 	}
 
 	@Override
-	public void deleteBorrower(String borrowerId) {
-		Borrower borrowerToDelete = getBorrower(borrowerId);
+	public void deleteBorrower(String id) {
+		Borrower borrowerToDelete = getBorrowerById(id);
 		// setting the visibility to deleted
 		borrowerToDelete.setVisibility(Visibility.DELETED);
 		LOGGER.info(" setting visibility to deleted ");
@@ -59,15 +59,22 @@ public class BorrowerServiceImpl implements BorrowerService {
 
 	@Override
 	public Borrower updateBorrower(Borrower borrower) {
-		getBorrower(borrower.getMobileNumber());
-		return borrowerDAO.save(borrower);
+		try {
+			return borrowerDAO.save(borrower);
+		} catch (DuplicateKeyException duplicateKeyException) {
+			LOGGER.info(" Exception occured in update Borrower method in BorrowerServiceImpl ");
+			LOGGER.info(" Exception message " + duplicateKeyException.getMessage());
+			throw new DuplicateValueException(
+					MicroFinanceUtil.getFieldNameFromMessage(duplicateKeyException.getMessage()));
+		}
 	}
 
 	@Override
 	public Borrower createBorrower(Borrower borrower) {
 		Borrower createdBorrower = null;
-		// setting the visibility to active
+		// setting the visibility to active and Id to aadhar number
 		borrower.setVisibility(Visibility.ACTIVE);
+		borrower.setId(borrower.getAadharNumber());
 		try {
 			createdBorrower = borrowerDAO.save(borrower);
 		} catch (DuplicateKeyException duplicateKeyException) {
@@ -78,6 +85,16 @@ public class BorrowerServiceImpl implements BorrowerService {
 		}
 		LOGGER.info(" borrower created successfully ");
 		return createdBorrower;
+	}
+
+	@Override
+	public Borrower getBorrowerById(String id) {
+		Optional<Borrower> optionalBorrower = borrowerDAO.findByIdAndVisibility(id, Visibility.ACTIVE);
+		if (!optionalBorrower.isPresent()) {
+			LOGGER.info(" no borrower details found for the id " + id);
+			throw new UserNotFoundException(" no borrower details found for the id " + id);
+		}
+		return optionalBorrower.get();
 	}
 
 }
