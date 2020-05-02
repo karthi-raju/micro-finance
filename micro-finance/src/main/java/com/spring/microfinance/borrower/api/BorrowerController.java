@@ -52,7 +52,7 @@ public class BorrowerController {
 
 	@ApiOperation(value = "Makes Borrower visibilty to deleted using id")
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Borrower> deleteBorrower(@PathVariable String id) {
+	public ResponseEntity<HttpStatus> deleteBorrower(@PathVariable String id) {
 		borrowerServiceImpl.deleteBorrower(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
