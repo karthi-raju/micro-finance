@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.microfinance.borrower.entity.Borrower;
 import com.spring.microfinance.collectionagent.entity.CollectionAgent;
 import com.spring.microfinance.collectionagent.service.CollectionAgentService;
 
@@ -36,29 +35,29 @@ public class CollectionAgentController {
 
 	@ApiOperation(value = "Retrieves active Collection Agent detail, based on given mobile number")
 	@GetMapping(value = "/{mobileNumber}")
-	public ResponseEntity<CollectionAgent> getBorrower(@PathVariable String mobileNumber) {
+	public ResponseEntity<CollectionAgent> getActiveCollectionAgent(@PathVariable String mobileNumber) {
 		return new ResponseEntity<CollectionAgent>(collectionAgentServiceImpl.getCollectionAgentByMobile(mobileNumber),
 				HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Retrieves all active Collection Agent details")
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<CollectionAgent>> getAllActiveBorrowers() {
+	public ResponseEntity<List<CollectionAgent>> getAllActiveCollectionAgents() {
 		return new ResponseEntity<List<CollectionAgent>>(collectionAgentServiceImpl.getAllCollectionAgent(),
 				HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Updates Collection Agent details")
 	@PutMapping
-	public ResponseEntity<CollectionAgent> updateBorrower(@RequestBody CollectionAgent collectionAgent) {
+	public ResponseEntity<CollectionAgent> updateCollectionAgent(@RequestBody CollectionAgent collectionAgent) {
 		return new ResponseEntity<CollectionAgent>(collectionAgentServiceImpl.updateCollectionAgent(collectionAgent),
 				HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Makes Collection Agent visibilty to deleted using id")
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Borrower> deleteBorrower(@PathVariable String id) {
-		collectionAgentServiceImpl.deleteCollectionAgent(id);
+	@DeleteMapping(value = "/{mobileNumber}")
+	public ResponseEntity<HttpStatus> deleteCollectionAgent(@PathVariable String mobileNumber) {
+		collectionAgentServiceImpl.deleteCollectionAgent(mobileNumber);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

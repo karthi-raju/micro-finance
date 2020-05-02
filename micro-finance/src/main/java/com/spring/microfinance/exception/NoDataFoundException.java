@@ -1,13 +1,13 @@
-package com.spring.microfinance.borrower.exception;
+package com.spring.microfinance.exception;
 
-public class NoUserDataFoundException extends RuntimeException {
+public class NoDataFoundException extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public NoUserDataFoundException(String message) {
+	public NoDataFoundException(String message) {
 		super(message);
 	}
 

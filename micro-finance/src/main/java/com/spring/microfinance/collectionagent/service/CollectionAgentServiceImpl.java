@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import com.spring.microfinance.borrower.exception.DuplicateValueException;
-import com.spring.microfinance.borrower.exception.NoUserDataFoundException;
-import com.spring.microfinance.borrower.exception.UserNotFoundException;
 import com.spring.microfinance.collectionagent.entity.CollectionAgent;
 import com.spring.microfinance.collectionagent.repository.CollectionAgentDAO;
+import com.spring.microfinance.exception.DuplicateValueException;
+import com.spring.microfinance.exception.NoDataFoundException;
+import com.spring.microfinance.exception.UserNotFoundException;
 import com.spring.microfinance.util.MicroFinanceUtil;
 import com.spring.microfinance.util.Visibility;
 
@@ -42,15 +42,16 @@ public class CollectionAgentServiceImpl implements CollectionAgentService {
 		List<CollectionAgent> cas = collectionAgentDAO.findByVisibility(Visibility.ACTIVE);
 		if (cas.size() == 0) {
 			LOGGER.info(" no borrower details found ");
-			throw new NoUserDataFoundException("no borrower details found");
+			throw new NoDataFoundException("no borrower details found");
 		}
 		LOGGER.info(" size of the borrower list " + cas.size());
 		return cas;
 	}
 
+	// TODO: While marking as DELETED, mark the references to DELETED
 	@Override
-	public void deleteCollectionAgent(String id) {
-		CollectionAgent collectionAgentToDelete = getCollectionAgentById(id);
+	public void deleteCollectionAgent(String collectionAgentmMobileNumber) {
+		CollectionAgent collectionAgentToDelete = getCollectionAgentByMobile(collectionAgentmMobileNumber);
 		// setting the visibility to deleted
 		collectionAgentToDelete.setVisibility(Visibility.DELETED);
 		LOGGER.info(" setting visibility to deleted ");
@@ -70,6 +71,9 @@ public class CollectionAgentServiceImpl implements CollectionAgentService {
 					MicroFinanceUtil.getFieldNameFromMessage(duplicateKeyException.getMessage()));
 		}
 	}
+
+	// TODO: While creating, check if mobile number is already exist with visibility
+	// as DELETED and retain the profile.
 
 	@Override
 	public CollectionAgent createCollectionAgent(CollectionAgent collectionAgent) {

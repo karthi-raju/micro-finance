@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.spring.microfinance.borrower.exception.DuplicateValueException;
-import com.spring.microfinance.borrower.exception.NoUserDataFoundException;
-import com.spring.microfinance.borrower.exception.UserNotFoundException;
-
 @ControllerAdvice
 @RestController
 public class MicrofinanceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -34,7 +30,7 @@ public class MicrofinanceExceptionHandler extends ResponseEntityExceptionHandler
 		return new ResponseEntity<Object>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler({ UserNotFoundException.class, NoUserDataFoundException.class })
+	@ExceptionHandler({ UserNotFoundException.class, NoDataFoundException.class })
 	public final ResponseEntity<Object> NotFoundException(Exception exception, WebRequest request) {
 		MicrofinanceErrorResponse exceptionResponse = new MicrofinanceErrorResponse();
 		exceptionResponse.setTimestamp(new Date());

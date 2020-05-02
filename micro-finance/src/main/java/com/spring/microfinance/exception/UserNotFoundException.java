@@ -1,4 +1,4 @@
-package com.spring.microfinance.borrower.exception;
+package com.spring.microfinance.exception;
 
 public class UserNotFoundException extends RuntimeException{
 

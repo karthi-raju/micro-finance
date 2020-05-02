@@ -23,10 +23,13 @@ public class CollectionAgent {
 	@Indexed(unique = true)
 	private String aadharNumber;
 
-	private String name;
-
 	@Indexed(unique = true)
 	private String mobileNumber;
+
+	@Indexed(unique = true)
+	private String drivingLicenseNumber;
+
+	private String name;
 
 	@Embedded
 	private Address address;
@@ -35,8 +38,6 @@ public class CollectionAgent {
 
 	private float salary;
 
-	@Indexed(unique = true)
-	private String drivingLicenseNumber;
-
 	private Visibility visibility;
+
 }

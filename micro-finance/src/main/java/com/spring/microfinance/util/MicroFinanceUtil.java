@@ -8,6 +8,8 @@ public class MicroFinanceUtil {
 			fieldName = Constant.AADHAR_NUMBER;
 		else if (message.contains(Constant.MOBILE_NUMBER_INDEX))
 			fieldName = Constant.MOBILE_NUMBER;
+		else if (message.contains(Constant.DRIVING_LICENSE_INDEX))
+			fieldName = Constant.DRIVING_LICENSE;
 		return fieldName;
 	}
 }
